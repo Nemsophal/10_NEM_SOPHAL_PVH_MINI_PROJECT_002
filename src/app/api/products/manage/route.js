@@ -10,9 +10,9 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { productName, price, description, imageUrl } = body;
+    const { name, price, description, imageUrl, colors, sizes, categoryId } = body;
 
-    if (!productName || !price) {
+    if (!name || !price) {
       return Response.json(
         { error: "Product name and price are required" },
         { status: 400 }
@@ -22,11 +22,14 @@ export async function POST(request) {
     return Response.json(
       {
         product: {
-          productId: Date.now().toString(),
-          productName,
+          id: Date.now().toString(),
+          name,
           price: parseFloat(price),
           description,
           imageUrl,
+          colors: colors || [],
+          sizes: sizes || [],
+          categoryId: categoryId || "",
         },
       },
       { status: 201 }
@@ -49,9 +52,9 @@ export async function PUT(request) {
 
   try {
     const body = await request.json();
-    const { productId, productName, price, description, imageUrl } = body;
+    const { id, name, price, description, imageUrl, colors, sizes, categoryId } = body;
 
-     if (!productId || !productName || !price) {
+     if (!id || !name || !price) {
        return Response.json(
          { error: "Product ID, name and price are required" },
          { status: 400 }
@@ -60,11 +63,14 @@ export async function PUT(request) {
 
      return Response.json({
        product: {
-         productId,
-         productName,
+         id,
+         name,
          price: parseFloat(price),
          description,
          imageUrl,
+         colors: colors || [],
+         sizes: sizes || [],
+         categoryId: categoryId || "",
        },
      });
   } catch (error) {

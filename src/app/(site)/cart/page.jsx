@@ -42,9 +42,53 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     try {
-      toast.success("Proceeding to checkout...");
+      const totalPrice = getTotalPrice();
+
+      // Prepare order data
+      const orderData = {
+        items: items.map((item) => ({
+          id: item.productId,
+          name: item.productName,
+          quantity: item.quantity,
+          price: item.price,
+          subtotal: item.price * item.quantity,
+          image: item.imageUrl,
+          selectedColor: item.selectedColor,
+          selectedSize: item.selectedSize,
+        })),
+        subtotal: totalPrice,
+        shipping: 0, // Free shipping for now
+        total: totalPrice,
+      };
+
+      // Create order via API
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create order");
+      }
+
+      const result = await response.json();
+      console.log("[Checkout] Order created:", result.order.id);
+
+      // Clear cart
+      clearCart();
+
+      // Show success message
+      toast.success("Order placed successfully! 🎉");
+
+      // Redirect to orders page after a short delay
+      setTimeout(() => {
+        window.location.href = "/orders";
+      }, 1500);
     } catch (error) {
-      toast.error("Checkout failed. Please try again.");
+      console.error("Checkout error:", error);
+      toast.error(error.message || "Checkout failed. Please try again.");
     }
   };
 
@@ -60,19 +104,19 @@ export default function CartPage() {
                  key={item.productId}
                  className="flex gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
                >
-                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                  {item.imageUrl ? (
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.productName}
-                      width={96}
-                      height={96}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-gray-400">◇</div>
-                  )}
-                 </div>
+                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                   {item.imageUrl ? (
+                     <Image
+                       src={item.imageUrl}
+                       alt={item.productName || "Product image"}
+                       width={96}
+                       height={96}
+                       className="h-full w-full object-cover"
+                     />
+                   ) : (
+                     <div className="flex h-full w-full items-center justify-center text-gray-400">◇</div>
+                   )}
+                  </div>
 
                  <div className="flex flex-1 flex-col gap-3">
                    <div>

@@ -1,33 +1,76 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { use } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
 
-export default function EditProductPage() {
+export default function EditProductPage({ params }) {
   const router = useRouter();
-  const params = useParams();
-  const productId = params?.productId;
+  const unwrappedParams = use(params);
+  const productId = unwrappedParams?.productId;
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
-    productName: "",
+    name: "",
     price: "",
     description: "",
     imageUrl: "",
+    colors: [],
+    sizes: [],
+    categoryId: "",
   });
 
   useEffect(() => {
-    setFormData({
-      productName: "Sample Product",
-      price: "29.99",
-      description: "This is a sample product for editing",
-      imageUrl: "",
-    });
-    setLoading(false);
+    if (!productId) return;
+
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/products/${productId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch product");
+        }
+
+        const data = await response.json();
+        const product = data.product || data;
+
+        setFormData({
+          name: product.name || "Sample Product",
+          price: product.price?.toString() || "0",
+          description: product.description || "",
+          imageUrl: product.imageUrl || "",
+          colors: product.colors || [],
+          sizes: product.sizes || [],
+          categoryId: product.categoryId || "",
+        });
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        toast.error("Failed to load product");
+        setFormData({
+          name: "Sample Product",
+          price: "0",
+          description: "",
+          imageUrl: "",
+          colors: [],
+          sizes: [],
+          categoryId: "",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
   }, [productId]);
 
   const handleChange = (e) => {
@@ -41,19 +84,40 @@ export default function EditProductPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.productName || !formData.price) {
+    if (!formData.name || !formData.price) {
       toast.error("Product name and price are required");
       return;
     }
 
     try {
       setSaving(true);
-      console.log("Updating product:", { productId, ...formData });
+      const response = await fetch(`/api/products/manage`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: productId,
+          name: formData.name,
+          price: parseFloat(formData.price),
+          description: formData.description,
+          imageUrl: formData.imageUrl,
+          colors: formData.colors || [],
+          sizes: formData.sizes || [],
+          categoryId: formData.categoryId || "",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update product");
+      }
+
       toast.success("Product updated successfully!");
       router.push("/manage-products");
     } catch (error) {
       console.error("Error updating product:", error);
-      toast.error("Failed to update product");
+      toast.error(error.message || "Failed to update product");
     } finally {
       setSaving(false);
     }
@@ -96,12 +160,12 @@ export default function EditProductPage() {
               <input
                 type="text"
                 id="productName"
-                name="productName"
-                value={formData.productName}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 required
                 className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 transition focus:border-lime-400 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
-                placeholder="e.g., Hyalu-Cica Hydrating Mask"
+                placeholder="e.g., T-Shirt"
               />
             </div>
 

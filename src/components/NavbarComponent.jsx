@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useCartStore } from "@/store/cart.store";
 import { Button } from "@heroui/react";
 
 const centerLinks = [
@@ -105,7 +106,7 @@ export default function NavbarComponent() {
   const [open, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated" && !!session;
-
+  const totalItems = useCartStore((state) => state.getTotalItems());
 
   const linkClass = (active) =>
     `relative flex items-center rounded-full px-3 py-2 text-sm font-medium transition ${
@@ -165,6 +166,11 @@ export default function NavbarComponent() {
             }`}
           >
             <CartBagIcon className="size-5" />
+            {totalItems > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-md">
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
           </Link>
 
           <Button

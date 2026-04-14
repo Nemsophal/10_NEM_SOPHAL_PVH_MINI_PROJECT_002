@@ -10,10 +10,13 @@ export default function CreateProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    productName: "",
+    name: "",
     price: "",
     description: "",
     imageUrl: "",
+    colors: [],
+    sizes: [],
+    categoryId: "",
   });
 
   const handleChange = (e) => {
@@ -27,19 +30,40 @@ export default function CreateProductPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.productName || !formData.price) {
+    if (!formData.name || !formData.price) {
       toast.error("Product name and price are required");
       return;
     }
 
     try {
       setLoading(true);
-      console.log("Creating product:", formData);
+      const response = await fetch(`/api/products/manage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          price: parseFloat(formData.price),
+          description: formData.description,
+          imageUrl: formData.imageUrl,
+          colors: formData.colors && formData.colors.length > 0 ? formData.colors : [],
+          sizes: formData.sizes && formData.sizes.length > 0 ? formData.sizes : [],
+          categoryId: formData.categoryId || "",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create product");
+      }
+
+      const data = await response.json();
       toast.success("Product created successfully!");
       router.push("/manage-products");
     } catch (error) {
       console.error("Error creating product:", error);
-      toast.error("Failed to create product");
+      toast.error(error.message || "Failed to create product");
     } finally {
       setLoading(false);
     }
@@ -67,12 +91,12 @@ export default function CreateProductPage() {
               <input
                 type="text"
                 id="productName"
-                name="productName"
-                value={formData.productName}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 required
                 className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 transition focus:border-lime-400 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
-                placeholder="e.g., Hyalu-Cica Hydrating Mask"
+                placeholder="e.g., T-Shirt"
               />
             </div>
 

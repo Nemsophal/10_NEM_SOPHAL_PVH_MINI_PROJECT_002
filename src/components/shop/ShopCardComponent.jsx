@@ -55,7 +55,7 @@ export default function ShopCardComponent({ product }) {
                         </span>
                     )}
                 </div>
-                <Link href={id ? `/products/${id}` : "#"} className={btnClass}>
+                <Link href={`/products/${id}`} className={btnClass}>
                     View Product
                 </Link>
             </div>
