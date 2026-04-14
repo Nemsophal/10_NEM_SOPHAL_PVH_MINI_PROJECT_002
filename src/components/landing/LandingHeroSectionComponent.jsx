@@ -28,35 +28,37 @@ export default function LandingHeroSectionComponent({ miniProducts }) {
           <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-gray-100 shadow-lg lg:aspect-auto lg:h-[min(36rem,70vh)]">
             <Image
               src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=900&h=1100&fit=crop"
-              alt=""
+              alt="Featured skincare product"
               fill
               priority
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
-          <div className="absolute -bottom-4 left-4 right-4 rounded-2xl border border-gray-100 bg-white/95 p-4 shadow-lg backdrop-blur-sm sm:left-auto sm:right-6 sm:w-72 lg:-left-6 lg:bottom-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Our best sellers
-            </p>
-            <div className="mt-3 flex gap-2">
-              {miniProducts.map((p) => (
-                <Link
-                  key={p.productId}
-                  href={`/products/${p.productId}`}
-                  className="relative size-14 overflow-hidden rounded-lg bg-gray-100 ring-1 ring-gray-100"
-                >
-                  {p.imageUrl ? (
-                    <Image src={p.imageUrl} alt="" fill sizes="56px" className="object-cover" />
-                  ) : (
-                    <span className="flex size-full items-center justify-center text-xs text-gray-400">
-                      ◇
-                    </span>
-                  )}
-                </Link>
-              ))}
+          {miniProducts.length > 0 && (
+            <div className="absolute -bottom-4 left-4 right-4 rounded-2xl border border-gray-100 bg-white/95 p-4 shadow-lg backdrop-blur-sm sm:left-auto sm:right-6 sm:w-72 lg:-left-6 lg:bottom-8">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Our best sellers
+              </p>
+              <div className="mt-3 flex gap-2">
+                {miniProducts.map((p) => (
+                  <Link
+                    key={p.productId ?? p.id}
+                    href={`/products/${p.productId ?? p.id}`}
+                    className="relative size-14 overflow-hidden rounded-lg bg-gray-100 ring-1 ring-gray-100"
+                  >
+                    {p.imageUrl ? (
+                      <Image src={p.imageUrl} alt={p.productName || "Product"} fill sizes="56px" className="object-cover" />
+                    ) : (
+                      <span className="flex size-full items-center justify-center text-xs text-gray-400">
+                        ◇
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

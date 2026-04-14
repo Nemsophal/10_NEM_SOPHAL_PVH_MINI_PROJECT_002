@@ -1,8 +1,15 @@
 "use client";
 
-import { HeroUIProvider } from "@heroui/react";
+import {HeroUIProvider} from "@heroui/react";
+import {SessionProvider} from "next-auth/react";
 import React from "react";
 
-export default function Provider({ children }) {
-  return <HeroUIProvider>{children}</HeroUIProvider>;
+export default function Provider({children}) {
+    return (
+        <HeroUIProvider>
+            <SessionProvider>
+                {children}
+            </SessionProvider>
+        </HeroUIProvider>
+    );
 }

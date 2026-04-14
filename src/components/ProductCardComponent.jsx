@@ -20,14 +20,14 @@ export default function ProductCardComponent({ product }) {
     <article className="group relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition hover:shadow-md">
       <Link href={`/products/${productId}`} className="block">
         <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt=""
-              fill
-              sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-cover transition group-hover:scale-[1.02]"
-            />
+           {imageUrl ? (
+             <Image
+               src={imageUrl}
+               alt={productName || "Product image"}
+               fill
+               sizes="(max-width: 768px) 50vw, 25vw"
+               className="object-cover transition group-hover:scale-[1.02]"
+             />
           ) : (
             <div className="flex size-full items-center justify-center bg-linear-to-br from-gray-100 to-lime-50/30 text-gray-400">
               ◇
@@ -45,7 +45,7 @@ export default function ProductCardComponent({ product }) {
         <p className="mt-2 text-base font-semibold tabular-nums text-gray-900">${price}</p>
       </div>
       <div className="absolute bottom-4 right-4">
-        <ButtonAddComponent productId={productId} />
+        <ButtonAddComponent product={product} />
       </div>
     </article>
   );

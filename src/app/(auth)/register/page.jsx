@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/lib/auth";
+import { redirect } from "next/navigation";
 import RegisterFormComponent from "../_components/RegisterFormComponent";
 
 
@@ -7,7 +10,12 @@ export const metadata = {
   description: "Create an account (demo UI only).",
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const session = await getServerSession(authOptions);
+  if (session) {
+    redirect("/");
+  }
+
   return (
     <div className="w-full rounded-2xl border border-gray-100 bg-white p-8 shadow-lg shadow-gray-200/60 sm:p-10">
       <h1 className="text-3xl font-semibold tracking-tight text-gray-900">

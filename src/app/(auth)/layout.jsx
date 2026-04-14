@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 function ProductIcon({ className, variant }) {
-  // Simple inline SVG icons (no external assets needed).
   if (variant === "bottle") {
     return (
       <svg
@@ -77,7 +76,6 @@ function ProductIcon({ className, variant }) {
     );
   }
 
-  // fallback: drop
   return (
     <svg
       viewBox="0 0 24 24"
@@ -99,43 +97,41 @@ export default function AuthLayout({ children }) {
     <main className="flex-1">
       <div className="relative mx-auto flex min-h-full max-w-7xl items-center justify-center px-4 py-12 sm:py-16">
         <div className="relative w-full max-w-md">
-          {/* Decorative product icons */}
-          <div className="pointer-events-none absolute -left-8 -top-8 text-lime-500/90">
-            <ProductIcon className="size-14" variant="bottle" />
-          </div>
-          <div className="pointer-events-none absolute -right-10 -top-2 text-teal-800/90">
-            <ProductIcon className="size-16" variant="jar" />
-          </div>
-          <div className="pointer-events-none absolute -left-4 bottom-24 text-lime-600/80">
-            <ProductIcon className="size-14" variant="leaf" />
-          </div>
-          <div className="pointer-events-none absolute -right-6 bottom-20 text-teal-950/70">
-            <ProductIcon className="size-14" variant="sparkle" />
-          </div>
-          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-12 text-lime-500/90">
-            <ProductIcon className="size-12" variant="drop" />
-          </div>
+           <div className="pointer-events-none absolute -left-8 -top-8 text-lime-500/90">
+             <ProductIcon className="size-14" variant="bottle" />
+           </div>
+           <div className="pointer-events-none absolute -right-10 -top-2 text-teal-800/90">
+             <ProductIcon className="size-16" variant="jar" />
+           </div>
+           <div className="pointer-events-none absolute -left-4 bottom-24 text-lime-600/80">
+             <ProductIcon className="size-14" variant="leaf" />
+           </div>
+           <div className="pointer-events-none absolute -right-6 bottom-20 text-teal-950/70">
+             <ProductIcon className="size-14" variant="sparkle" />
+           </div>
+           <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-12 text-lime-500/90">
+             <ProductIcon className="size-12" variant="drop" />
+           </div>
 
-          <div className="mb-6 text-center">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/70 px-4 py-2 shadow-sm backdrop-blur-sm"
-              aria-label="Go to home"
-            >
-              <span className="text-sm font-semibold tracking-tight text-gray-900">
-                PurelyStore
-              </span>
-              <span className="inline-flex size-8 items-center justify-center rounded-full bg-lime-400/80 text-gray-900 shadow-sm">
-                ✦
-              </span>
-            </Link>
-            <p className="mt-3 text-sm text-gray-500">
-              Demo login & register experience (no backend).
-            </p>
-          </div>
+           <div className="mb-6 text-center">
+             <Link
+               href="/"
+               className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/70 px-4 py-2 shadow-sm backdrop-blur-sm"
+               aria-label="Go to home"
+             >
+               <span className="text-sm font-semibold tracking-tight text-gray-900">
+                 PurelyStore
+               </span>
+               <span className="inline-flex size-8 items-center justify-center rounded-full bg-lime-400/80 text-gray-900 shadow-sm">
+                 ✦
+               </span>
+             </Link>
+             <p className="mt-3 text-sm text-gray-500">
+               Demo login & register experience (no backend).
+             </p>
+           </div>
 
-          {/* Centered form card comes from the route page */}
-          <div>{children}</div>
+           <div>{children}</div>
         </div>
       </div>
     </main>

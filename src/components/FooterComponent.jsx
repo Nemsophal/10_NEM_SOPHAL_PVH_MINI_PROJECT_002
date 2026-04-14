@@ -1,9 +1,7 @@
 import Link from "next/link";
 import ButtonComponent from "./ButtonComponent";
-// import { auth } from "@/app/auth";
 
 export default async function FooterComponent() {
-  // const session = await auth();
   return (
     <footer id="contact" className="mt-auto border-t border-gray-200 bg-white">
       <div className="mx-auto w-full max-w-7xl py-12 lg:py-16">
